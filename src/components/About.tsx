@@ -1,105 +1,122 @@
-import { Card } from "@/components/ui/card";
-import { Code2, Palette, Rocket } from "lucide-react";
+"use client";
+import { useEffect, useRef } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const About = () => {
-  const highlights = [
-    {
-      icon: Code2,
-      title: "Full Stack Development",
-      description: "Building robust applications with modern technologies and best practices."
-    },
-    {
-      icon: Palette,
-      title: "UI/UX Design",
-      description: "Creating intuitive and beautiful user experiences that delight users."
-    },
-    {
-      icon: Rocket,
-      title: "Performance Optimization",
-      description: "Ensuring fast, efficient, and scalable solutions for optimal user experience."
-    }
+const AboutSection = () => {
+  const quickFacts = [
+    "Based in Bangalore, Karnataka",
+    "BE in Information Science & Technology (2018)",
+    "Frontend Developer (4+ years) specializing in React.js & Next.js",
+    "Skilled in JavaScript, TypeScript, Node.js, Express.js, REST APIs",
+    "Passionate about UI/UX design, performance optimization & responsive design",
+    "Improved web app Lighthouse score from 37% → 67% through code optimization",
+    "Experience with React Native for iOS & Android apps",
   ];
 
+  const listRef = useRef<HTMLUListElement | null>(null);
+
+  useEffect(() => {
+    const items = listRef.current?.querySelectorAll<HTMLLIElement>("li") ?? [];
+
+    // If IntersectionObserver not supported, just reveal all
+    if (typeof IntersectionObserver === "undefined") {
+      items.forEach((el, i) => {
+        el.classList.remove("opacity-0", "translate-y-5");
+        el.classList.add("opacity-100", "translate-y-0");
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            // remove hidden classes, add visible classes
+            el.classList.remove("opacity-0", "translate-y-5");
+            el.classList.add("opacity-100", "translate-y-0");
+            obs.unobserve(el); // animate once
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="about" className="section-padding bg-card/20 bg-white">
+    <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-black">
-            About me
-          </h2>
-          <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-sm text-primary font-semibold uppercase tracking-wider">
-            WHO AM I
-          </p>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-4">About Me</h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Profile Image */}
-          <div className="flex justify-center lg:justify-start">
-            <div className="relative">
-              <div className="w-80 h-96 bg-card rounded-lg overflow-hidden shadow-card">
-                <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face" 
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground p-4 rounded-lg shadow-lg">
-                <p className="text-sm font-bold text-black">Frontend</p>
-                <p className="text-sm text-black">Developer</p>
-              </div>
-            </div>
-          </div>
-          {/* Text Content */}
-          <div className="space-y-6">
-            <div>
-              <p className="text-lg leading-relaxed mb-4 text-black">
-                I'm a <span className="text-primary font-semibold">Pooja</span> and{" "}
-                <span className="text-primary font-semibold">I'm a Front End Developer</span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          <Card className="bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-2xl">Professional Bio</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                I’m Pooja Rachatte, a Frontend Developer with 4 years of
+                experience specializing in React.js, Next.js, JavaScript, and
+                TypeScript.
               </p>
-              
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                I am a dedicated front end developer focused on creating attractive 
-                and user-friendly websites. I am passionate about translating design 
-                concepts into interactive digital experiences and continually 
-                improving my skill set to stay updated with the latest industry trends. 
-                My portfolio showcases a variety of projects that demonstrate my 
-                ability to solve problems and to make innovative solutions.
+              <p>
+                I build scalable, responsive, and user-friendly web applications
+                with a strong focus on performance, accessibility, and clean
+                UI/UX. My expertise includes RESTful API integration,
+                authentication/authorization, and performance optimization—
+                boosting application speed, engagement, and overall user
+                experience.
               </p>
-            </div>
+              <p>
+                Alongside React web apps, I also have hands-on experience in
+                React Native for building iOS and Android applications. Over the
+                years, I’ve collaborated with cross-functional teams, optimized
+                websites for SEO, implemented code splitting and lazy loading,
+                and improved Lighthouse scores significantly.
+              </p>
+              <p>
+                When I’m not coding, I enjoy solving complex debugging
+                challenges, experimenting with new technologies, and translating
+                design concepts into interactive digital experiences.
+              </p>
+            </CardContent>
+          </Card>
 
-            {/* Social Links */}
-            <div className="flex gap-4">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/80 transition-colors"
-              >
-                <span className="text-primary-foreground text-sm font-bold">G</span>
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/80 transition-colors"
-              >
-                <span className="text-primary-foreground text-sm font-bold">T</span>
-              </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/80 transition-colors"
-              >
-                <span className="text-primary-foreground text-sm font-bold">L</span>
-              </a>
-            </div>
-          </div>
+          <Card className="bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-2xl">Quick Facts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3" ref={listRef}>
+                {quickFacts.map((fact, index) => (
+                  <li
+                    key={index}
+                    // initial hidden classes are present in the markup so Tailwind keeps them
+                    className={
+                      "flex items-start opacity-0 translate-y-5 transition-all duration-700 ease-out"
+                    }
+                    // stagger using inline style so we can compute delay per item
+                    style={{
+                      transitionDelay: `${index * 0.14}s`,
+                      willChange: "transform, opacity",
+                    }}
+                  >
+                    <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <span className="text-muted-foreground">{fact}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
   );
 };
 
-export default About;
+export default AboutSection;
